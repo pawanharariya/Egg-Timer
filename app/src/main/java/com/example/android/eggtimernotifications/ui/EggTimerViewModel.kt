@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package com.example.android.eggtimernotifications.ui
 
 import android.app.*
@@ -23,6 +23,7 @@ import android.os.CountDownTimer
 import android.os.SystemClock
 import androidx.core.app.AlarmManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.lifecycle.*
 import com.example.android.eggtimernotifications.receiver.AlarmReceiver
 import com.example.android.eggtimernotifications.R
@@ -62,17 +63,11 @@ class EggTimerViewModel(private val app: Application) : AndroidViewModel(app) {
 
     init {
         _alarmOn.value = PendingIntent.getBroadcast(
-            getApplication(),
-            REQUEST_CODE,
-            notifyIntent,
-            PendingIntent.FLAG_NO_CREATE
+            getApplication(), REQUEST_CODE, notifyIntent, PendingIntent.FLAG_NO_CREATE
         ) != null
 
         notifyPendingIntent = PendingIntent.getBroadcast(
-            getApplication(),
-            REQUEST_CODE,
-            notifyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            getApplication(), REQUEST_CODE, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         timerLengthOptions = app.resources.getIntArray(R.array.minutes_array)
@@ -114,11 +109,9 @@ class EggTimerViewModel(private val app: Application) : AndroidViewModel(app) {
                 _alarmOn.value = true
                 val selectedInterval = when (timerLengthSelection) {
                     0 -> second * 10 //For testing only
-                    else ->timerLengthOptions[timerLengthSelection] * minute
+                    else -> timerLengthOptions[timerLengthSelection] * minute
                 }
                 val triggerTime = SystemClock.elapsedRealtime() + selectedInterval
-
-                // TODO: Step 1.5 get an instance of NotificationManager and call sendNotification
 
                 // TODO: Step 1.15 call cancel notification
 
@@ -176,13 +169,11 @@ class EggTimerViewModel(private val app: Application) : AndroidViewModel(app) {
         _alarmOn.value = false
     }
 
-    private suspend fun saveTime(triggerTime: Long) =
-        withContext(Dispatchers.IO) {
-            prefs.edit().putLong(TRIGGER_TIME, triggerTime).apply()
-        }
+    private suspend fun saveTime(triggerTime: Long) = withContext(Dispatchers.IO) {
+        prefs.edit().putLong(TRIGGER_TIME, triggerTime).apply()
+    }
 
-    private suspend fun loadTime(): Long =
-        withContext(Dispatchers.IO) {
-            prefs.getLong(TRIGGER_TIME, 0)
-        }
+    private suspend fun loadTime(): Long = withContext(Dispatchers.IO) {
+        prefs.getLong(TRIGGER_TIME, 0)
+    }
 }
