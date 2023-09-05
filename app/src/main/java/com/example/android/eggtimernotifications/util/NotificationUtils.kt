@@ -44,7 +44,17 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         NotificationCompat.BigPictureStyle().bigPicture(eggImage).bigLargeIcon(null)
     val contentIntent = Intent(applicationContext, MainActivity::class.java)
     val contentPendingIntent = PendingIntent.getActivity(
-        applicationContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        applicationContext,
+        NOTIFICATION_ID,
+        contentIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
+    val snoozeIntent = Intent(applicationContext, SnoozeReceiver::class.java)
+    val snoozePendingIntent = PendingIntent.getBroadcast(
+        applicationContext,
+        REQUEST_CODE,
+        snoozeIntent,
+        PendingIntent.FLAG_CANCEL_CURRENT
     )
     val builder = NotificationCompat.Builder(
         applicationContext, applicationContext.getString(R.string.egg_notification_channel_id)
@@ -55,6 +65,12 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setAutoCancel(true)
         .setStyle(bigPictureStyle)
         .setLargeIcon(eggImage)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .addAction(
+            R.drawable.egg_icon,
+            applicationContext.getString(R.string.snooze),
+            snoozePendingIntent
+        )
     notify(NOTIFICATION_ID, builder.build())
 }
 
