@@ -2,7 +2,7 @@
 
 EggTimer is a timer app for cooking eggs.
 You can start and stop the timer and choose different cooking intervals based on how much boiled you
-want your eggs to be. When the timer finishers the user is notified by a notification.
+want your eggs to be. When the timer finishers you will be notified with a notification.
 
 The app demonstrates the use of Notification Manager and Channels to deliver notifications.
 
